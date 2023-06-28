@@ -49,9 +49,7 @@
 3. As an artist, I want to receive comments and feedback on my  streams and videos, so that I can improve my skills and connect with my audience.
 4. As an everyday user, I want to bookmark and save my favorite videos, so that I can easily access and revisit them later.
 5. As an artist, I want to have monetization options, such as ad revenue or sponsorship opportunities, so that I can generate income from my artistic content.
-6. As an everyday user, I want personalized recommendations based on my viewing history and preferences, so that I
-
- can discover content tailored to my interests.
+6. As an everyday user, I want personalized recommendations based on my viewing history and preferences, so that I can discover content tailored to my interests.
 7. As an artist, I want to collaborate with other artists on creative projects, so that we can collectively produce unique and compelling content.
 8. As an everyday user, I want to engage in discussions and forums related to artistic topics, so that I can connect with fellow art enthusiasts and share my thoughts.
 9. As an artist, I want to track the performance of my videos, including views, likes, and comments, so that I can gauge audience engagement and measure the impact of my work.
