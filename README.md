@@ -55,3 +55,259 @@
 9. As an artist, I want to track the performance of my videos, including views, likes, and comments, so that I can gauge audience engagement and measure the impact of my work.
 10. As an everyday user, I want to receive notifications about new releases from my favorite artists, so that I can stay updated and never miss their latest creations.
 
+
+
+Data Model
+Reference: https://www.back4app.com/parse#data-modeling
+
+Users Table
+
+Column
+type
+Notes
+example
+id
+int
+Primary Key
+1
+username
+string
+unique
+“godfred123”
+password
+string
+
+
+“iamtheish”
+dob
+date
+
+
+12/31/2002
+email
+string
+unique
+“realswat@meta.com
+created_at
+date
+
+
+12/31/2022
+updated_at
+date
+
+
+1/31/2023
+
+
+Subscription Table
+Column
+type
+Notes
+example
+id
+int
+Primary Key
+1
+streamer_user_id
+int
+Foreign Key to users table
+
+
+subscriber_user_id 
+int
+Foreign Key to Users table 
+
+
+created_at
+date
+
+
+
+
+updated_at
+date
+
+
+
+
+
+Optional: unique index on [subscriber, streamer]
+
+Streams Table
+Column
+type
+Notes
+example
+id
+int
+Primary Key
+1
+url
+string
+unique
+“”
+API_key
+string
+
+
+“8y38y8648”
+created_at
+Time stamp
+
+
+12/2/2022 08:45
+end_time
+Time stamp
+
+
+12/2/2022 09:30
+
+
+Video Table
+Column
+type
+Notes
+example
+id
+int
+Primary Key
+1
+title
+string
+
+
+
+
+description
+string
+
+
+
+
+duration
+date
+
+
+
+
+url
+string
+unique
+“”
+user_id
+Foreign key
+
+
+
+
+upload_date
+Time stamped
+
+
+12/31/2021 08:45
+is_live
+boolean
+
+
+
+
+is_saved
+boolean
+
+
+
+
+updated_at
+date
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Video_category Table
+Column
+type
+Notes
+example
+id
+int
+Primary Key
+1
+vide_id
+int
+Foreign key
+1
+categoty_id
+int
+Foreign
+1
+created_at
+date
+
+
+
+
+updated_at
+date
+
+
+
+
+
+
+
+API Routes
+User Routes:
+GET /users: Retrieve a list of all users.
+POST /users: Create a new user.
+GET /users/:id: retrieve information about a specific user
+PUT /users/:id: update information for a specific user.
+GET /users/:id/followers: Retrieve a list of followers for the user with the specific “:id”.
+GET /users/:id/following: Retrieve a list of users that the user with the specific “:id” is following.
+ POST /users/:id/followers/:followerId: Create a new follower relationship between the user with the specified “:id” and the user with the “:followerId”
+ DELETE /users/:id/followers/:followerId: Remove the follower relationship between the user with the specified “:id” and the user with the “:followerId
+DELETE /users/:id: Delete a specific user.
+Live Stream Routes:
+GET /livestreams : Retrieve a list of all live streams.
+POST /livestreams: Start a new live stream.
+GET /livestreams/:id: Retrieve information about a specific live stream.
+PUT /livestreams/:id: Update information for a specific livestream.
+DELETE /livestreams/:id: End a specific live stream.
+GET /livestreams/:id/comments: Retrieve the comments for a specific live stream..
+POST /livestreams/:id/comments: Add a new comment to a specific live stream
+
+
+Video Routes:
+GET /videos : retrieve a list of all videos.
+POST /videos: Create a new video.
+GET /videos/:id: Retrieve information about a specific videos
+PUT /videos/:id: Update information for a specific video.
+DELETE /videos/:id: Delete a specific video
+GET /videos/:id/comments: Retrieve the comments for a specific video.
+POST /videos/:id/comments: Add a new comment to a specific video.
+PUT /videos/:id/like: Like a specific video
+PUT /videos/:id/dislike: Dislike a specific video.
+
+Category Routes:
+GET /categories: Retrieve a list of all categories.
+POST /categories: Create a new category.
+GET /categories/:id: Retrieve information about a specific category
+PUT /categories/:id: Update information for a specific category.
+DELETE /videos/:id: Delete a specific category
+
+Subscription Routes:
+GET /subscriptions: Retrieve a list of all subscriptions.
+POST /subscriptions: Subscribe to a user’s channel
+DELETE /subscriptions/:id: Unsubscribe  from a user’s channel
+
+
