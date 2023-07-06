@@ -18,7 +18,7 @@ router.post('/register', async(req, res)=> {
         }
 
         // Encripting password
-        const hashedPassword = await bcrypt.harsh(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         // creating new user 
         const newUser = await User.create({
@@ -86,7 +86,7 @@ router.get('/me', authentificationToken, async (req, res)=> {
     // mildware Authentification
     function authentificationToken(req, res, next){
         const authHeader = req.Headers['authorization'];
-        const token = authHeader && authHeader.spilt('')[i];
+        const token = authHeader && authHeader.split('')[i];
 
 
         if (token== null){
