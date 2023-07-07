@@ -1,106 +1,71 @@
-const express = require ('express');
+import express from 'express';
+import bcrypt from 'bcrypt';
+import { User } from '../models/user.js';
+import { Op } from 'sequelize';
+
 const router = express.Router();
-const bcrypt = require('bcrypt');
-const jwt = require ('jsonwebtoken');
-const user = require ('../models/users');
 
+// Route for user registration
+router.post('/users', async (req, res) => {
+  const { username, password, email } = req.body;
 
-// user registration 
-router.post('/register', async(req, res)=> { 
-    try {
+  try {
+    // Check if username or email already exists
+    const existingUser = await User.findOne({
+      where: {
+        [Op.or]: [{ username }, { email }]
+      }
+    });
 
-        const { username, email, password} = req.body;
-
-        // now checking of user already exists.
-        const existingUser = await user.findOne({where: {email}|| {username}});
-        if (existingUser) {
-            return res.status(400).json({message: 'user already exist'});
-        }
-
-        // Encripting password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // creating new user 
-        const newUser = await User.create({
-            username,
-            email,
-            password: hashedPassword,
-        });
-
-        return res.status(201).json({message: 'Registration sucesssful'})
-    } catch(error){
-        console.error('Error in User Registration:', error);
-        return req.status(500).json({message: 'Internal Error'});
+    if (existingUser) {
+      return res.status(400).json({ error: 'Username or email already exists' });
     }
 
+    // Encrypt the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user
+    const newUser = await User.create({ username, password: hashedPassword, email });
+
+    // Set the user in the session
+    req.session.user = newUser;
+
+    // Return the user data in the response
+    res.json({ user: newUser });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
+// Route for user login
+router.post('/users/login', async (req, res) => {
+  const { username, password } = req.body;
 
-// user's login
-router.post('/login', async(req,res)=>{
-    try{
-        const{email, password} = req.body;
+  try {
+    // Find the user by username
+    const user = await User.findOne({ where: { username } });
 
-        //checking if the user exists
-        const user = await user.findOne({where: {email}});
-        if (!user){
-            return res.return(404).json({message: 'user not found'});
-        }
-
-        // check passwaord 
-        const isPassValid = await bycrpt.compare(password, user.password);
-        if (!isPassValid){
-            return res.status(401).json({message: 'Invalid password'});
-        }
-
-
-        //Generate JWT
-        const token = jwt.sign ({userId: user.id}, 'your secret key');
-
-        return res.status(200).json({token});
-    } catch(error) {
-        console.error('Error in user Login', error);
-        return res.status(500).json({message: 'Internal server error.'});
-    }
-});
-
-// Safe Route for Retrieving user profile 
-router.get('/me', authentificationToken, async (req, res)=> {
-    try{
-    // get the authentificated user ID from the request object
-    
-    const {userId} = req.user;
-
-    // retrieving user details 
-    const user = await user.findByPk(userId, {attributes: ['id', 'username', 'email']});
     if (!user) {
-        return res.status(404).json({message: 'user not found'});
+      return res.status(401).json({ error: 'Invalid username or password' });
     }
 
-    return res.status(200).json(user);
-    } catch(error){
-        console.error('Error retrieving user profile: ', error);
-        return res.status(500).json({message: 'Internal server error'});
+    // Compare the password
+    const isValidPassword = await bcrypt.compare(password, user.password);
+
+    if (!isValidPassword) {
+      return res.status(401).json({ error: 'Invalid username or password' });
     }
 
-    // mildware Authentification
-    function authentificationToken(req, res, next){
-        const authHeader = req.Headers['authorization'];
-        const token = authHeader && authHeader.split('')[i];
+    // Set the user in the session
+    req.session.user = user;
 
+    // Return the user data in the response
+    res.json({ user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 
-        if (token== null){
-            return res.status(401).json({message: 'unauthorized'});
-        }
-        jwt.verify(token, 'your-secret-key', (err, user) =>{
-            if (err){
-                return res.status(403).json({message: 'Invalid token'});
-            }
-
-            req.user = user;
-            next();
-        });
-    }
-    module.exports = router;
-
-})
+export default router;

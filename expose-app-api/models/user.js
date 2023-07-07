@@ -1,12 +1,10 @@
-// models/user.js
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../database.js';
 
 export const User = sequelize.define('User', {
   username: {
     type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
+    allowNull: false
   },
   email: {
     type: DataTypes.STRING,
@@ -16,11 +14,5 @@ export const User = sequelize.define('User', {
   password: {
     type: DataTypes.STRING,
     allowNull: false
-  },
-  created_at: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-  },
-
+  }
 });
